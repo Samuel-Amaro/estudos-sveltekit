@@ -8,6 +8,7 @@
   <a href="/" target="_self" rel="next">home</a>
   <a href="/about" target="_self" rel="next">about</a>
   <a href="/blog" target="_self" rel="next">blog</a>
+  <a href="/a/deeply/nested/route">a deeply nested route</a>
 </nav>
 
 <!--
