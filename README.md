@@ -7,7 +7,7 @@
   - [x] Headers and cookies
   - [x] Shared modules
   - [x] Forms
-  - [] API Routes
+  - [x] API Routes
   - [] Stores
   - [] Errors and redirects
 
