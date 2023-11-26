@@ -1,8 +1,15 @@
 # Estudos Aprendizagem SvelteKit
 
- - []
- - []
- - []
+ - Básico SvelteKit
+  - [x] Introduction
+  - [x] Routing
+  - [x] Loading Data
+  - [x] Headers and cookies
+  - [x] Shared modules
+  - [x] Forms
+  - [] API Routes
+  - [] Stores
+  - [] Errors and redirects
 
 ## Create(riando um Projeto)
 
@@ -43,6 +50,32 @@ Ou inicie o servidor e abra o aplicativo em uma nova aba do navegador
 ```bash
 npm run dev -- --open
 ```
+
+## Format, Lint, Check
+
+Formatar o código (Prettier)
+
+```bash
+npm run format
+```
+
+---
+
+Executar o Lint
+
+```bash
+npm run lint
+```
+
+---
+
+Executar a verificação do Svelte
+
+```bash
+npm run check #or
+npm run check:watch
+```
+
 
 ## Building(Construção)
 
