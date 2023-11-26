@@ -35,11 +35,17 @@ export function createTodo(userid: string, description: string) {
       throw new Error("todos must be unique");
     }
 
+    const id = crypto.randomUUID();
+
     user.todos.push({
-      id: crypto.randomUUID(),
+      id: id,
       description,
       done: false
     });
+
+    return {
+      id
+    }
   }
 }
 
@@ -51,5 +57,18 @@ export function deleteTodo(userid: string, todoid: string) {
     if (index !== -1) {
       user.todos.splice(index, 1);
     }
+  }
+}
+
+export function toggleTodo(userid: string, id: string, done: boolean) {
+  const user = db.find((user) => user.userid === userid);
+  if(user) {
+	  user.todos.map((todo) => {
+      if(todo.id === id) {
+        todo.done = done;
+        return todo;
+      }
+      return todo;
+    })
   }
 }
