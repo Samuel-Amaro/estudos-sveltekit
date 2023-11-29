@@ -40,6 +40,10 @@
   <a href="/blog" target="_self" rel="next" aria-current={$page.url.pathname === "/blog"}>blog</a>
   <a href="/a/deeply/nested/route" aria-current={$page.url.pathname === "/a/deeply/nested/route"}>a deeply nested route</a>
   <a href="/route-api" aria-current={$page.url.pathname === "/route-api"}>route api</a>
+  <a href="/expected" aria-current={$page.url.pathname === "/expected"}>page with expected error</a>
+  <a href="/unexpected" aria-current={$page.url.pathname === "/unexpected"}>page with unexpected error</a>
+  <a href="/a" aria-current={$page.url.pathname === "/a"}>a</a>
+  <a href="/b" aria-current={$page.url.pathname === "/b"}>b</a>
 
   <!--aqui vamos usar o store navigating para mostrar um  indicador de carregamento para navegações de longa duração-->
   {#if $navigating}

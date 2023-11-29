@@ -1,0 +1,7 @@
+<!--aqui e uma  página de erro de fallback, caso haja um erro ao carregar dados de uma load de um /+layout.server.ts ou ao renderizar uma página de erro mais granular,  o SvelteKit retornará para uma página de erro estática.-->
+
+<h1>Game over</h1>
+<!--%sveltekit.status% — o código de status HTTP-->
+<p>Code %sveltekit.status%</p>
+<!--%sveltekit.error.message% - a mensagem de erro-->
+<p>%sveltekit.error.message%</p>
