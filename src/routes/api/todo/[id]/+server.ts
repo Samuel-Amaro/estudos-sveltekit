@@ -1,4 +1,4 @@
-//Da mesma forma, podemos adicionar manipuladores para outros verbos HTTP. 
+//Da mesma forma, podemos adicionar manipuladores para outros verbos HTTP.
 
 import * as database from '$lib/server/database';
 

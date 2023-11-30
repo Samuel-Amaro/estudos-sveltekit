@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { message } from "$lib/message";
+	import { message } from '$lib/message';
 </script>
 
 <h1>a deeply nested route</h1>

@@ -1,5 +1,5 @@
 export const emojis: {
-  [index: string]: string
+	[index: string]: string;
 } = {
 	// TODO add the rest!
 	420: '🫠',

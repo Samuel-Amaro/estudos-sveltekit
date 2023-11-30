@@ -6,11 +6,11 @@
 -->
 
 <script lang="ts">
-	import type { PageData } from "./$types";
+	import type { PageData } from './$types';
 
-  //Um +page.svelte arquivo pode ter um irmão +page.server.ts que exporta uma load função, cujo valor de retorno está disponível para a página através da data prop
-  //podemos acessar os dados do carregamento por meio do data prop
-  export let data: PageData;
+	//Um +page.svelte arquivo pode ter um irmão +page.server.ts que exporta uma load função, cujo valor de retorno está disponível para a página através da data prop
+	//podemos acessar os dados do carregamento por meio do data prop
+	export let data: PageData;
 </script>
 
 <h1>{data.post?.title}</h1>

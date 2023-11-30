@@ -1,16 +1,11 @@
-<svelte:head>
-	<title>Todos</title>
-	<meta name="description" content="This is where the description goes for SEO" />
-</svelte:head>
-
 <script lang="ts">
-  import { message } from "$lib/message";
-	import { enhance } from "$app/forms";
-	import { fly, slide } from "svelte/transition";
-	import type { TypeTodo } from "$lib/types/todo.type.js";
+	import { message } from '$lib/message';
+	import { enhance } from '$app/forms';
+	import { fly, slide } from 'svelte/transition';
+	import type { TypeTodo } from '$lib/types/todo.type.js';
 
-  //podemos acessar os dados retornados do carregamento(load) por meio do data prop
-  export let data;
+	//podemos acessar os dados retornados do carregamento(load) por meio do data prop
+	export let data;
 	//podemos acessar o valor retornado de uma validação de formulario por meio de uma action por meio da form prop, que so e preenchida apos o envio do formulario
 	export let form;
 
@@ -18,6 +13,11 @@
 	let creating = false;
 	let deleting: string[] = [];
 </script>
+
+<svelte:head>
+	<title>Todos</title>
+	<meta name="description" content="This is where the description goes for SEO" />
+</svelte:head>
 
 <!--<h1>Hello {data.visited ? 'friend' : 'stranger'}!</h1>-->
 <p>this is the home page</p>
@@ -28,17 +28,16 @@
   - quando precisamos enviar ou transferir dados do navegador para o servidor, eai que o <form> entra - a forma de envio de dados da plataforma web
 -->
 <div class="centered">
-  <h1>todos</h1>
+	<h1>todos</h1>
 
 	<!--mensagem de validação do form-->
 	{#if form?.error}
 		<p class="error">{form.error}</p>
-		{:else if form?.message}
+	{:else if form?.message}
 		<p class="sucess">{form.message}</p>
 	{/if}
-	
 
-  <!--
+	<!--
     - Se digitarmos algo <input> e pressionarmos Enter, o navegador fará uma solicitação POST (por causa do method="POST" atributo) para a página atual. fara uma request para o segmento atual desta page, assim no +page.ts ou +page.Server.ts ira receber esta request e manipula-la
     - quem lida com a request com method POST e uma action de servidor declarada na +page.server.ts rota que estamos
 		- O <form> elemento possui um action atributo opcional, que é semelhante ao atributo <a> de um elemento href. aponte para uma action nomeada, a action default não precisar usar o action atributo do form
@@ -60,62 +59,76 @@
 			- Você pode usar essas funções para mostrar e ocultar a interface de carregamento e assim por diante.
 			- use:enhance é muito personalizável – você pode cancel()enviar envios, lidar com redirecionamentos, controlar se o formulário será redefinido e assim por diante. Veja os documentos para detalhes completos.
 		-->
-  <form method="post" action="?/create" use:enhance={() => {
-		//esta function sera executada antes do envio do form
-		
-		//atribui um novo valor ao state
-		//para podermos usar UI otimista
-		creating = true;
+	<form
+		method="post"
+		action="?/create"
+		use:enhance={() => {
+			//esta function sera executada antes do envio do form
 
-		//retornamos um callback
-		//que sera executado junto com o action deste form, este callback sera executado no action que esta declarado no +page.server.ts
-		return async ({update}) => {
-			// `update` é uma função que aciona a lógica padrão que seria acionada se esse retorno de chamada não fosse definido
-			//aciona o comportamento padrão do navegador
-			await update();
-			//novo valor ao state
-			creating = false;
-		}
-	}}>
-    <label>
-      add a todo:
-      <input type="text" name="description" autocomplete="off" required value={form?.description ?? ''} disabled={creating}/>
-    </label>
-  </form>
+			//atribui um novo valor ao state
+			//para podermos usar UI otimista
+			creating = true;
 
-  <ul class="todos">
-    {#each data.todos.filter((todo) => !deleting.includes(todo.id)) as todo (todo.id)}
-		<!--
+			//retornamos um callback
+			//que sera executado junto com o action deste form, este callback sera executado no action que esta declarado no +page.server.ts
+			return async ({ update }) => {
+				// `update` é uma função que aciona a lógica padrão que seria acionada se esse retorno de chamada não fosse definido
+				//aciona o comportamento padrão do navegador
+				await update();
+				//novo valor ao state
+				creating = false;
+			};
+		}}
+	>
+		<label>
+			add a todo:
+			<input
+				type="text"
+				name="description"
+				autocomplete="off"
+				required
+				value={form?.description ?? ''}
+				disabled={creating}
+			/>
+		</label>
+	</form>
+
+	<ul class="todos">
+		{#each data.todos.filter((todo) => !deleting.includes(todo.id)) as todo (todo.id)}
+			<!--
 			- add transitions no li elemento ao ser criado e destruido no DOM
 		-->
-      <li in:fly={{y: 20}} out:slide>
+			<li in:fly={{ y: 20 }} out:slide>
 				<!--
 					- temos um form completo para cada task, com um oculto <input> que o identifique exclusivamente
 					- este form possui uma action nomeada para manipular os dados
 					- Com o use:enhance, podemos ir além de apenas emular o comportamento nativo do navegador. Ao fornecer um retorno de chamada, podemos adicionar coisas como estados pendentes e UI otimista .
 					- use:enhanceé muito personalizável – você pode cancel()enviar envios, lidar com redirecionamentos, controlar se o formulário será redefinido e assim por diante. Veja os documentos para detalhes completos.
 				-->
-				<form method="POST" action="?/delete" use:enhance={() => {
-					deleting = [...deleting, todo.id];
-					return async ({ update }) => {
-						await update();
-						deleting = deleting.filter((id) => id !== todo.id);
-					};
-				}}>
+				<form
+					method="POST"
+					action="?/delete"
+					use:enhance={() => {
+						deleting = [...deleting, todo.id];
+						return async ({ update }) => {
+							await update();
+							deleting = deleting.filter((id) => id !== todo.id);
+						};
+					}}
+				>
 					<input type="hidden" name="id" value={todo.id} />
 					<span>{todo.description}</span>
-					<button aria-label="Mark as complete"/>
+					<button aria-label="Mark as complete" />
 				</form>
-      </li>
-    {/each}
-  </ul>
+			</li>
+		{/each}
+	</ul>
 
 	<!--mostra mensagem enquanto salva um todo, aqui um UI otimista,  enquanto o todo esta sendo salvo mostra esta mensagem para  o user-->
 	{#if creating}
 		<span class="saving">saving...</span>
 	{/if}
 </div>
-
 
 <style>
 	.centered {
@@ -154,9 +167,7 @@
 		opacity: 0.5;
 	}
 
-  input {
-    color: black;
-  }
+	input {
+		color: black;
+	}
 </style>
-
-

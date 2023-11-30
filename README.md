@@ -1,15 +1,15 @@
 # Estudos Aprendizagem SvelteKit
 
- - Básico SvelteKit
-  - [x] Introduction
-  - [x] Routing
-  - [x] Loading Data
-  - [x] Headers and cookies
-  - [x] Shared modules
-  - [x] Forms
-  - [x] API Routes
-  - [] Stores
-  - [] Errors and redirects
+- Básico SvelteKit
+- [x] Introduction
+- [x] Routing
+- [x] Loading Data
+- [x] Headers and cookies
+- [x] Shared modules
+- [x] Forms
+- [x] API Routes
+- [] Stores
+- [] Errors and redirects
 
 ## Create(riando um Projeto)
 
@@ -76,7 +76,6 @@ npm run check #or
 npm run check:watch
 ```
 
-
 ## Building(Construção)
 
 Para criar uma versão de produção do seu aplicativo:
@@ -87,7 +86,7 @@ npm run build
 
 ---
 
-Você pode visualizar a compilação de produção com 
+Você pode visualizar a compilação de produção com
 
 ```bash
 npm run preview

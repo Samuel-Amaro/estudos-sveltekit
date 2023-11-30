@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import * as db from "$lib/server/database";
+import * as db from '$lib/server/database';
 import { fail } from '@sveltejs/kit';
 
 //declaramos uma function de carregamento, de dados para a page /
@@ -9,11 +9,11 @@ import { fail } from '@sveltejs/kit';
 
 /**
  * * HEADERS AND COOKIES
- * 
+ *
  * Dentro de uma função de carregamento (bem como em ações de formulário, ganchos e rotas de API, sobre as quais aprenderemos mais tarde), você tem acesso a uma função setHeaders, que — sem surpresa — pode ser usada para definir cabeçalhos na resposta.
- * 
+ *
  * Mais comumente, você o usaria para personalizar o comportamento do cache com o cabeçalho de resposta Cache-Control, mas neste tutorial faremos algo menos aconselhável e mais dramático:
-*/
+ */
 
 //Tanto as funções de servidor quanto as universais load têm acesso a uma setHeaders função que, quando executada no servidor, pode definir cabeçalhos para a resposta. (Quando executado no navegador, setHeadersnão tem efeito.)
 
@@ -37,7 +37,7 @@ import { fail } from '@sveltejs/kit';
 */
 
 //function de carregamento de dados, trabalhando com cookie
-//vamos usar a cookiesAPI dentro da load function 
+//vamos usar a cookiesAPI dentro da load function
 /*export const load: PageServerLoad = ({cookies}) => {
   //lendo um cookie
 	const visited = cookies.get('visited');
@@ -52,17 +52,17 @@ import { fail } from '@sveltejs/kit';
 
 //function de carregamento de dados para a route /
 //vamos usa a cookies API para que possamos ter uma lista de tarefas por usuario
-export const load: PageServerLoad = ({cookies}) => {
-  const id = cookies.get("userid");
+export const load: PageServerLoad = ({ cookies }) => {
+	const id = cookies.get('userid');
 
-  if(!id) {
-    cookies.set("userid", crypto.randomUUID(), {path: "/"});
-  }
+	if (!id) {
+		cookies.set('userid', crypto.randomUUID(), { path: '/' });
+	}
 
-  //os dados a serem retornados pela function load
-  return {
-    todos: db.getTodos(id as string) ?? []
-  }
+	//os dados a serem retornados pela function load
+	return {
+		todos: db.getTodos(id as string) ?? []
+	};
 };
 
 //criando uma action aqui no server para lidar com uma request POST na rota /, esta action ira lidar com uma request POST feita na page /
@@ -70,10 +70,10 @@ export const load: PageServerLoad = ({cookies}) => {
 //Ao usar o <form>, o JavaScript do lado do cliente é opcional, mas você pode aprimorar progressivamente as interações do formulário com JavaScript para fornecer a melhor experiência do usuário.
 //As ações sempre utilizam POST solicitações, pois GET as solicitações nunca devem ter efeitos colaterais.
 export const actions = {
-  //No caso mais simples, uma página declara uma default ação:
-  //uma action permitem enviar POST dados para o servidor usando o <form> elemento
-  //o browser enviaaria os dados do formulario via POST request ao servidor, executando a action padrão, ou action nomeados
-  /*default: async ({cookies, request}) => {
+	//No caso mais simples, uma página declara uma default ação:
+	//uma action permitem enviar POST dados para o servidor usando o <form> elemento
+	//o browser enviaaria os dados do formulario via POST request ao servidor, executando a action padrão, ou action nomeados
+	/*default: async ({cookies, request}) => {
     //obtem os dados do form via request POST e armazena no nosso db fake
     //A solicitação(request) é um objeto Request padrão; await request.formData() retorna uma instância FormData(conjunto de pares key/value representando campos de formulario e seus valores).  
     //Quando pressionamos Enter, o banco de dados(insere novos valores no array) é atualizado e a página é recarregada com os novos dados.
@@ -82,42 +82,44 @@ export const actions = {
     db.createTodo(cookies.get('userid') as string, data.get('description') as FormDataEntryValue as string)
   }*/
 
-  //Uma página que possui apenas uma ação(action) é, na prática, bastante rara. Na maioria das vezes você precisará ter múltiplas ações em uma página. 
-  //vamos substituir a default action por actions nomeadas create e delete
-  //As actions default não podem coexistir com ações nomeadas.
-  //aqui temos uma action nomeada para criar umm todo no nosso db fake e salvar
-  create: async ({cookies, request}) => {
-    //simulando uma rede lenta adicionando uma atraso artificial as nossas actions
-    await new Promise((fulfil) => setTimeout(fulfil, 1000));
-    //obtem os dados do form via request POST e armazena no nosso db fake
-    //A solicitação(request) é um objeto Request padrão; await request.formData() retorna uma instância FormData(conjunto de pares key/value representando campos de formulario e seus valores).  
-    //o banco de dados(insere novos valores no array) é atualizado e a página é recarregada com os novos dados.
-    const data = await request.formData();
+	//Uma página que possui apenas uma ação(action) é, na prática, bastante rara. Na maioria das vezes você precisará ter múltiplas ações em uma página.
+	//vamos substituir a default action por actions nomeadas create e delete
+	//As actions default não podem coexistir com ações nomeadas.
+	//aqui temos uma action nomeada para criar umm todo no nosso db fake e salvar
+	create: async ({ cookies, request }) => {
+		//simulando uma rede lenta adicionando uma atraso artificial as nossas actions
+		await new Promise((fulfil) => setTimeout(fulfil, 1000));
+		//obtem os dados do form via request POST e armazena no nosso db fake
+		//A solicitação(request) é um objeto Request padrão; await request.formData() retorna uma instância FormData(conjunto de pares key/value representando campos de formulario e seus valores).
+		//o banco de dados(insere novos valores no array) é atualizado e a página é recarregada com os novos dados.
+		const data = await request.formData();
 
-    //Os usuários são um grupo travesso, que enviará todos os tipos de dados sem sentido se tiver oportunidade. Para evitar que causem caos, é importante validar os dados do formulário.
-    //Para se proteger contra esse tipo de travessura, você deve sempre usar a validação do lado do servidor.
-    try {
-      //para validação amigavel para o user
-      //Seria muito melhor permanecer na mesma página e fornecer uma indicação do que deu errado para que o usuário possa consertar. Para fazer isso, podemos usar a fail função para retornar dados da ação junto com um código de status HTTP apropriado:
-      db.createTodo(cookies.get('userid') as string, data.get('description') as FormDataEntryValue as string)
-      //Você também pode retornar dados de uma ação sem envolvê-la fail— por exemplo, para mostrar um 'sucesso!' mensagem quando os dados foram salvos - e estarão disponíveis através do formprop.
-      return {
-        message: "Sucess!"
-      }
-    } catch (error) {
-        //fail função para retornar dados da ação junto com um código de status HTTP apropriado:
-        return fail(422, {
-          description: data.get('description') as FormDataEntryValue as string,
-          error: error?.message
-        })
-    }
-    
-  },
+		//Os usuários são um grupo travesso, que enviará todos os tipos de dados sem sentido se tiver oportunidade. Para evitar que causem caos, é importante validar os dados do formulário.
+		//Para se proteger contra esse tipo de travessura, você deve sempre usar a validação do lado do servidor.
+		try {
+			//para validação amigavel para o user
+			//Seria muito melhor permanecer na mesma página e fornecer uma indicação do que deu errado para que o usuário possa consertar. Para fazer isso, podemos usar a fail função para retornar dados da ação junto com um código de status HTTP apropriado:
+			db.createTodo(
+				cookies.get('userid') as string,
+				data.get('description') as FormDataEntryValue as string
+			);
+			//Você também pode retornar dados de uma ação sem envolvê-la fail— por exemplo, para mostrar um 'sucesso!' mensagem quando os dados foram salvos - e estarão disponíveis através do formprop.
+			return {
+				message: 'Sucess!'
+			};
+		} catch (error) {
+			//fail função para retornar dados da ação junto com um código de status HTTP apropriado:
+			return fail(422, {
+				description: data.get('description') as FormDataEntryValue as string,
+				error: error?.message
+			});
+		}
+	},
 
-  //aqui temos outra action nomeada para deletar uma todo do nosso db fake
-  delete: async ({ cookies, request }) => {
-    //simulando uma rede lenta adicionando uma atraso artificial as nossas actions
-    await new Promise((fulfil) => setTimeout(fulfil, 1000));
+	//aqui temos outra action nomeada para deletar uma todo do nosso db fake
+	delete: async ({ cookies, request }) => {
+		//simulando uma rede lenta adicionando uma atraso artificial as nossas actions
+		await new Promise((fulfil) => setTimeout(fulfil, 1000));
 		const data = await request.formData();
 		db.deleteTodo(cookies.get('userid') as string, data.get('id') as FormDataEntryValue as string);
 	}
