@@ -44,6 +44,16 @@
   <a href="/unexpected" aria-current={$page.url.pathname === "/unexpected"}>page with unexpected error</a>
   <a href="/a" aria-current={$page.url.pathname === "/a"}>a</a>
   <a href="/b" aria-current={$page.url.pathname === "/b"}>b</a>
+  <a href="/ping" aria-current={$page.url.pathname === "/ping"}>ping</a>
+  <a href="/ssr" aria-current={$page.url.pathname === "/ssr"}>ssr</a>
+  <a href="/csr" aria-current={$page.url.pathname === "/csr"}>csr</a>
+  <a href="/prerender" aria-current={$page.url.pathname === "/prerender"}>prerender</a>
+  <a href="/always" aria-current={$page.url.pathname === "/always"}>/always</a>
+	<a href="/always/" aria-current={$page.url.pathname === "/always"}>/always/</a>
+	<a href="/ignore" aria-current={$page.url.pathname === "/ignore"}>/ignore</a>
+	<a href="/ignore/" aria-current={$page.url.pathname === "/ignore"}>/ignore/</a>
+	<a href="/never" aria-current={$page.url.pathname === "/never"}>/never</a>
+	<a href="/never/" aria-current={$page.url.pathname === "/never"}>/never/</a>
 
   <!--aqui vamos usar o store navigating para mostrar um  indicador de carregamento para navegações de longa duração-->
   {#if $navigating}
