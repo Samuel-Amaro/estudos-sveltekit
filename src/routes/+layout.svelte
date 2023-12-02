@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { navigating, page, updated } from '$app/stores';
+		import type { Navigation } from '@sveltejs/kit';
+	import { onMount } from 'svelte';
 
 	/*
 	 * * LAYOUTS
@@ -29,15 +31,83 @@
 	 * from e to - objetos com propriedades params, route, e url
 	 * type — o tipo de navegação, por exemplo link, popstate ou goto
 	 *
-	 */
+	 * * OPTIONS DE LINKS - PRÉ CARREGAMENTO
+	 * 
+	 * Neste exercício, as rotas /slow-a e /slow-b possuem atrasos artificiais em suas load funções, o que significa que leva muito tempo para navegar até elas.
+	 * 
+	 * Nem sempre você pode fazer com que seus dados sejam carregados mais rapidamente – às vezes isso está fora de seu controle – mas o SvelteKit pode acelerar as navegações antecipando- as . Quando um <a> elemento possui um data-sveltekit-preload-data atributo, o SvelteKit iniciará a navegação assim que o usuário passar o mouse sobre o link (no desktop) ou tocar nele (no celular). Tente adicioná-lo ao primeiro link:
+	 * 
+	 * A navegação para /slow-aagora será visivelmente mais rápida. Iniciar a navegação ao passar o mouse ou tocar (em vez de esperar que um clickevento seja registrado) pode não parecer fazer muita diferença, mas na prática normalmente economiza 200 ms ou mais. Isso é o suficiente para ser a diferença entre lento e ágil.
+	 * 
+	 * Você pode colocar o atributo em links individuais ou em qualquer elemento que contenha links. O modelo de projeto padrão inclui o atributo no <body>elemento: <body data-sveltekit-preload-data>%sveltekit.body%</body>
+	 * 
+	 * Você pode personalizar ainda mais o comportamento especificando um dos seguintes valores para o atributo:
+	 * 
+	 * "hover"(padrão, volta para "tap"celular)
+	 * 
+	 * "tap"- comece o pré-carregamento apenas com um toque
+	 * 
+	 * "off"- desabilitar pré-carregamento
+	 * 
+	 * Às vezes, o uso data-sveltekit-preload-datapode resultar em falsos positivos - ou seja, carregar dados em antecipação a uma navegação que não acontece então - o que pode ser indesejável. Como alternativa, data-sveltekit-preload-codepermite pré-carregar o JavaScript necessário para uma determinada rota sem carregar seus dados avidamente. Este atributo pode ter os seguintes valores:
+	 * 
+	 * "eager"— pré-carregar tudo na página após uma navegação
+	 * "viewport"— pré-carrega tudo como aparece na janela de visualização
+	 * "hover"(padrão) como acima
+	 * "tap"- como acima
+	 * "off"- como acima
+	 * 
+	 * Você também pode iniciar o pré-carregamento programaticamente com preloadCode e preloadData importado de $app/navigation:
+	 * 
+	 * import { preloadCode, preloadData } from '$app/navigation';
+
+		// pré-carregar o código e os dados necessários para navegar para /foo
+		preloadData('/foo');
+
+		// pré-carregar o código necessário para navegar para /bar, mas não os dados
+		preloadCode('/bar');
+	*/
+
+	let previous: Navigation;
+	let start: number;
+	let end: number | null;
+	let seconds = 0;
+
+	$: if ($navigating) {
+		start = Date.now();
+		end = null;
+		previous = $navigating;
+	} else {
+		end = Date.now();
+	}
+
+	/**
+	 * * OPTIONS DE LINKS - RELOADING THE PAGE
+	 * 
+	 * Normalmente, o SvelteKit navegará entre as páginas sem atualizá-las. Neste exercício, se navegarmos entre / e /about, o cronômetro continua funcionando.
+	 * 
+	 * Em casos raros, você pode querer desabilitar esse comportamento. Você pode fazer isso adicionando o data-sveltekit-reload atributo em um link individual ou em qualquer elemento que contenha links:
+	*/
+
+	onMount(() => {
+		const interval = setInterval(() => {
+			seconds += 1;
+		}, 1000);
+
+		return () => {
+			clearInterval(interval);
+		};
+	});
 </script>
 
 <nav>
 	<!--vamos usar a store $page.URL.pathname para acessar o nome do caminho atual-->
-	<a href="/" target="_self" rel="next" aria-current={$page.url.pathname === '/'}>home</a>
+	<!--aqui usando o atributo data-sveltekit-reload você pode querer desabilitar esse comportamento de navegar entre as páginas sem atualizá-las. Você pode fazer isso adicionando o data-sveltekit-reload atributo em um link individual ou em qualquer elemento que contenha links:-->
+	<a href="/" target="_self" rel="next" aria-current={$page.url.pathname === '/'} data-sveltekit-reload>home</a>
 	<a href="/todos" target="_self" rel="next" aria-current={$page.url.pathname === '/todos'}>todos</a
 	>
-	<a href="/about" target="_self" rel="next" aria-current={$page.url.pathname === '/about'}>about</a
+	<!--aqui usando o atributo data-sveltekit-reload você pode querer desabilitar esse comportamento de navegar entre as páginas sem atualizá-las. Você pode fazer isso adicionando o data-sveltekit-reload atributo em um link individual ou em qualquer elemento que contenha links:-->
+	<a href="/about" target="_self" rel="next" aria-current={$page.url.pathname === '/about'} data-sveltekit-reload>about</a
 	>
 	<a href="/blog" target="_self" rel="next" aria-current={$page.url.pathname === '/blog'}>blog</a>
 	<a href="/a/deeply/nested/route" aria-current={$page.url.pathname === '/a/deeply/nested/route'}
@@ -60,6 +130,11 @@
 	<a href="/ignore/" aria-current={$page.url.pathname === '/ignore'}>/ignore/</a>
 	<a href="/never" aria-current={$page.url.pathname === '/never'}>/never</a>
 	<a href="/never/" aria-current={$page.url.pathname === '/never'}>/never/</a>
+	<!--
+		- o SvelteKit pode acelerar as navegações antecipando- as. Quando um <a> elemento possui um data-sveltekit-preload-data atributo, o SvelteKit iniciará a navegação assim que o usuário passar o mouse sobre o link (no desktop) ou tocar nele (no celular).
+	-->
+	<a href="/slow-a" aria-current={$page.url.pathname === '/slow-a'} data-sveltekit-preload-data>slow-a</a>
+	<a href="/slow-b" aria-current={$page.url.pathname === '/slow-b'}>slow-b</a>
 
 	<!--aqui vamos usar o store navigating para mostrar um  indicador de carregamento para navegações de longa duração-->
 	{#if $navigating}
@@ -84,3 +159,23 @@
 		<button on:click={() => location.reload()}> reload the page </button>
 	</p>
 {/if}
+
+{#if previous && end && previous.to && previous.from}
+	<p>navigated from {previous.from.url.pathname} to {previous.to.url.pathname} in <strong>{end - start}ms</strong></p>
+{/if}
+
+<p>the page has been open for {seconds} seconds</p>
+
+<style>
+	a{
+		display: block;
+		text-decoration: none;
+	}
+
+	nav{
+		display: flex;
+		flex-flow: row wrap;
+		align-items: center;
+		justify-content: center;
+	}
+</style>
