@@ -98,6 +98,8 @@
 			clearInterval(interval);
 		};
 	});
+
+	const colors = ['ff3e00', '676779', '42b4ff', 'invalid'];
 </script>
 
 <nav>
@@ -120,6 +122,8 @@
 	>
 	<a href="/a" aria-current={$page.url.pathname === '/a'}>a</a>
 	<a href="/b" aria-current={$page.url.pathname === '/b'}>b</a>
+	<a href="/a/b" aria-current={$page.url.pathname === '/a/b'}>/a/b</a>
+	<a href="/a/b/c" aria-current={$page.url.pathname === '/a/b/c'}>/a/b/c</a>
 	<a href="/ping" aria-current={$page.url.pathname === '/ping'}>ping</a>
 	<a href="/ssr" aria-current={$page.url.pathname === '/ssr'}>ssr</a>
 	<a href="/csr" aria-current={$page.url.pathname === '/csr'}>csr</a>
@@ -136,6 +140,18 @@
 	<a href="/slow-a" aria-current={$page.url.pathname === '/slow-a'} data-sveltekit-preload-data>slow-a</a>
 	<a href="/slow-b" aria-current={$page.url.pathname === '/slow-b'}>slow-b</a>
 
+	<a href="/en" aria-current={$page.url.pathname === '/en'}>english</a>
+	<a href="/de" aria-current={$page.url.pathname === '/de'}>german</a>
+	<a href="/fr" aria-current={$page.url.pathname === '/fr'}>french</a>
+
+	<a href="/about2" aria-current={$page.url.pathname === "/about2"}>about2</a>
+	<a href="/account" aria-current={$page.url.pathname === "/account"}>account</a>
+	<a href="/app" aria-current={$page.url.pathname === "/app"}>app</a>
+
+	{#each colors as color}
+		<a href="/colors/{color}" aria-current={$page.url.pathname === `/colors/${color}`} style="--color: #{color}">#{color}</a>
+	{/each}
+
 	<!--aqui vamos usar o store navigating para mostrar um  indicador de carregamento para navegações de longa duração-->
 	{#if $navigating}
 		navigating to {$navigating.to?.url.pathname}
@@ -145,7 +161,9 @@
 <!--
   - O <slot /> elemento é onde o conteúdo da página será renderizado:
 -->
-<slot />
+<div class="layout" data-name="root">
+	<slot />
+</div>
 
 <!--
   - A updated loja contém true ou false dependendo se uma nova versão do aplicativo foi implantada desde que a página foi aberta pela primeira vez.
@@ -177,5 +195,44 @@
 		flex-flow: row wrap;
 		align-items: center;
 		justify-content: center;
+	}
+
+	a {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	a::before {
+		content: '';
+		width: 2em;
+		height: 2em;
+		background: var(--color);
+	}
+
+	:global(.layout) {
+		position: relative;
+		border: 1px solid #999;
+		padding: 1em;
+		margin: 1em 0 0 0;
+		border-radius: 4px;
+	}
+
+	:global(.layout::before) {
+		position: absolute;
+		content: attr(data-name) ' layout';
+		left: 1em;
+		top: -1em;
+		background-color: white;
+		color: #222;
+		padding: 0.5em;
+		line-height: 1;
+	}
+
+	@media (prefers-color-scheme: dark) {
+		:global(.layout::before) {
+			background: #2e2e2e;
+			color: #e6e6e6;
+		}
 	}
 </style>
