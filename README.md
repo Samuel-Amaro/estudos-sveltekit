@@ -1,15 +1,22 @@
 # Estudos Aprendizagem SvelteKit
 
 - Básico SvelteKit
-- [x] Introduction
-- [x] Routing
-- [x] Loading Data
-- [x] Headers and cookies
-- [x] Shared modules
-- [x] Forms
-- [x] API Routes
-- [] Stores
-- [] Errors and redirects
+ - [x] Introduction
+ - [x] Routing
+ - [x] Loading Data
+ - [x] Headers and cookies
+ - [x] Shared modules
+ - [x] Forms
+ - [x] API Routes
+ - [x] Stores
+ - [x] Errors and redirects
+- Avançado SvelteKit
+ - [x] Hooks
+ - [x] Page Options
+ - [x] Link Options
+ - [x] Advanced routing
+ - [x] Advanced loading
+ - [x] Environment variables
 
 ## Create(riando um Projeto)
 
