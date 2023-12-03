@@ -190,6 +190,14 @@
 	<a href="/timezone/America/Los_Angeles" aria-current={$page.url.pathname === "/timezone/America/Los_Angeles"}>Los Angeles</a>
 </nav>
 
+<nav>
+	<a href="/logintwo" aria-current={$page.url.pathname === "/logintwo"}>Login Two</a>
+</nav>
+
+<nav>
+	<a href="/theme" aria-current={$page.url.pathname === "/theme"}>Theme</a>
+</nav>
+
 <!--
   - O <slot /> elemento é onde o conteúdo da página será renderizado:
 -->
