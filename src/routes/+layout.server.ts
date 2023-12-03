@@ -12,3 +12,8 @@ export function load() {
   //aqui lançamos um erro inesperado
 	throw new Error('Kaboom!');
 }*/
+
+//function de carregamento de dados do server para o layout root
+export async function load() {
+	return {a: 1};
+}

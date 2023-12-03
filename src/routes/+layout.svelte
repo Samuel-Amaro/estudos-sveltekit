@@ -105,7 +105,8 @@
 <nav>
 	<!--vamos usar a store $page.URL.pathname para acessar o nome do caminho atual-->
 	<!--aqui usando o atributo data-sveltekit-reload você pode querer desabilitar esse comportamento de navegar entre as páginas sem atualizá-las. Você pode fazer isso adicionando o data-sveltekit-reload atributo em um link individual ou em qualquer elemento que contenha links:-->
-	<a href="/" target="_self" rel="next" aria-current={$page.url.pathname === '/'} data-sveltekit-reload>home</a>
+	<a href="/" target="_self" rel="next" aria-current={$page.url.pathname === '/'} data-sveltekit-reload>/</a>
+	<a href="/home" target="_self" rel="next" aria-current={$page.url.pathname === '/home'} data-sveltekit-reload>/home</a>
 	<a href="/todos" target="_self" rel="next" aria-current={$page.url.pathname === '/todos'}>todos</a
 	>
 	<!--aqui usando o atributo data-sveltekit-reload você pode querer desabilitar esse comportamento de navegar entre as páginas sem atualizá-las. Você pode fazer isso adicionando o data-sveltekit-reload atributo em um link individual ou em qualquer elemento que contenha links:-->
@@ -156,6 +157,37 @@
 	{#if $navigating}
 		navigating to {$navigating.to?.url.pathname}
 	{/if}
+</nav>
+
+<nav
+	class:has-color={!!$page.data.color}
+	style:background={$page.data.color ?? 'var(--bg-2)'}
+>
+	<a href="/">home</a>
+	<a href="/red">red</a>
+	<a href="/green">green</a>
+	<a href="/blue">blue</a>
+
+	<!--aqui estamos usando o component retornado dessas load funções de /red, /gree, /blue como qualquer outro valor, , aqui usamos o store do svelte usando o modulo page, vamos usar a propriedade $page.data.componente  data — os dados da página atual, combinando os valores de retorno de todas as load funções-->
+	{#if $page.data.component}
+		<svelte:component this={$page.data.component} />
+	{/if}
+</nav>
+
+<nav>
+	<a href="/sum" aria-current={$page.url.pathname === "/sum"}>if a = 1 and b = a + 1, what is a + b? show answer</a>
+</nav>
+
+<nav>
+	<a href="/timezone/America/New_York" aria-current={$page.url.pathname === "/timezone/America/New_York"}>New York</a>
+	<a href="/timezone/America/Sao_Paulo" aria-current={$page.url.pathname === "/timezone/America/Sao_Paulo"}>São Paulo</a>
+	<a href="/timezone/Europe/London" aria-current={$page.url.pathname === "/timezone/Europe/London"}>London</a>
+	<a href="/timezone/Europe/Paris" aria-current={$page.url.pathname === "/timezone/Europe/Paris"}>Paris</a>
+	<a href="/timezone/Africa/Cairo" aria-current={$page.url.pathname === "/timezone/Africa/Cairo"}>Cairo</a>
+	<a href="/timezone/Asia/Shanghai" aria-current={$page.url.pathname === "/timezone/Asia/Shanghai"}>Shanghai</a>
+	<a href="/timezone/Asia/Tokyo" aria-current={$page.url.pathname === "/timezone/Asia/Tokyo"}>Tokyo</a>
+	<a href="/timezone/Australia/Sydney" aria-current={$page.url.pathname === "/timezone/Australia/Sydney"}>Sydney</a>
+	<a href="/timezone/America/Los_Angeles" aria-current={$page.url.pathname === "/timezone/America/Los_Angeles"}>Los Angeles</a>
 </nav>
 
 <!--
@@ -234,5 +266,10 @@
 			background: #2e2e2e;
 			color: #e6e6e6;
 		}
+	}
+
+	nav.has-color,
+	nav.has-color a {
+		color: white;
 	}
 </style>
